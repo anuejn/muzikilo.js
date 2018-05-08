@@ -1,0 +1,23 @@
+{
+  "name": "synth",
+  "version": "1.0.0",
+  "description": "A code driven synthesizer for the browser",
+  "main": "index.js",
+  "repository": "github.com/anuejn/57milliarden",
+  "author": "anuejn",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build --public-url ./ ./src/index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.7.1"
+  },
+  "dependencies": {
+    "react": "^15.0.1",
+    "react-ace": "^6.1.1",
+    "react-dom": "^15.0.1",
+    "react-monaco-editor": "^0.15.0",
+    "react-splitter-layout": "^3.0.0"
+  }
+}
