@@ -5,7 +5,7 @@ export class CodeEditor extends React.Component {
   constructor() {
     super();
     this.state = {
-      code: '// given are t, keys and knobs\nreturn Math.random() * .1'
+      code: '// given are t, keys and knobs\nreturn Math.random() * .01'
     }
   }
 
@@ -16,7 +16,10 @@ export class CodeEditor extends React.Component {
         theme="vs-dark"
         value={this.state.code}
         onChange={(newValue) => {this.setState({code: newValue}); this.props.onChange(newValue)}}
-        editorDidMount={(editor) => editor.focus()}
+        editorDidMount={(editor) => {
+          editor.focus();
+          setTimeout(() => this.props.onChange(this.state.code), 0);
+        }}
         options={{automaticLayout: true}}
       />
     );

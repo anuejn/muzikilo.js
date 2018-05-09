@@ -5,27 +5,18 @@ html, body {
   margin: 0;
 }
 
-.keyboardNav {
-  height: 100%;
-  width: 15px;
-  text-align: center;
-  display: inline-block;
-
-  padding: 0 10px;
-  position: relative;
-  top: 25%;
-}
-
 .keyboard {
-  height: calc(100% - 25px);
-  margin: 25px;
+  height: 100%;
+  padding: 0 25px;
   margin-top: 0;
-  display: inline-block;
+  display: flex;
+  overflow-y: scroll;
 }
 
 .keyboard > div {
   display: inline-block;
-  height: calc(100% - 25px);
+  flex-shrink: 0;
+  height: calc(100% - 20px);
   padding: 0;
   margin: 0;
   width: 50px;
@@ -37,7 +28,7 @@ html, body {
 
 .keyboard > .black {
   background: #000;
-  height: calc(60% - 25px);;
+  height: calc(61.8% - 20px);
   width: 30px;
   margin: 0 -16px;
 }
@@ -47,12 +38,12 @@ html, body {
 }
 
 .knobs {
-  margin-left: 50px;
-  padding-left: 25px;
-  border-left: 1px dashed #999;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  background: #1E1E1E;
+  height: 100%;
+  justify-content: space-evenly;
 }
 
 .knob {
@@ -60,11 +51,13 @@ html, body {
   flex-direction: column;
   text-align: center;
   margin: 10px;
+  margin-top: 20px;
 }
 
 .knob > label {
   margin-top: -20px;
   font-size: 12px;
+  color: #DCDCDC;
 }
 
 .knob span {
@@ -74,7 +67,7 @@ html, body {
   width: 100%;
   margin-left: -100%;
   transform: translateY(-50%);
-  color: #EA2;
+  color: #569CD6;
 }
 
 .knob > div {
