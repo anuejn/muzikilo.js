@@ -11,35 +11,25 @@ export default class App extends Component {
     super();
 
     this.state = {
-      fns: [],
-      knobs: {
-        volume: .5,
-        envelope: .5,
-        sustain: .5,
-        decay: .5,
-        distortion: .5,
-      },
+      knobs: {},
       keys: [],
     }
+
+    this.audioWorklet = null;
+    this.audioContext = null;
+    this.iteration = 0;
 
     this.startAudio();
   }
 
   render() {
+    this.updateParams()
+
     return (
       <SplitterLayout vertical percentage secondaryInitialSize={20}>
         <SplitterLayout percentage secondaryInitialSize={35}>
           <CodeEditor 
-            onChange={newValue => {
-              try {
-                const fnString = `(t, keys, knobs, state) => {\n${newValue}\n}`
-                const fn = eval(fnString);
-                this.setState({fns: this.state.fns.concat([fn])});
-                console.warn('code compiled!');
-              } catch(e) {
-                console.warn('code did not compile!');
-              }
-            }}
+            onChange={newValue => this.updateCode(newValue)}
           />
           <Knobs
             knobs={this.state.knobs} 
@@ -54,40 +44,67 @@ export default class App extends Component {
     );
   }
 
-  startAudio() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  updateParams() {
+    Object.keys(this.state.knobs).forEach(knob => {
+      try {
+        let param = this.audioWorklet.parameters.get(knob);
+        param.linearRampToValueAtTime(this.state.knobs[knob], this.audioContext.currentTime + .05);
+      } catch (e) {
+      }
+    })
+  }
 
-    const node = audioCtx.createScriptProcessor(2048, 1, 1);
+  updateCode(code) {
+    this.iteration++;
 
-    // set variables up
-    window.context = this;
-    const persistancy = {};
+    let knobs = code.match(/knobs\.([a-z]+)/g);
+    knobs = knobs ? knobs : [];
+    knobs = knobs.map(match => match.match(/knobs\.([a-z]+)/)[1])
 
-    node.onaudioprocess = function (e) {
-      const {outputBuffer} = e;
-      outputBuffer.copyToChannel(outputBuffer.getChannelData(0).map((_, i) => {
-        const t = (e.playbackTime + i / e.outputBuffer.sampleRate);
-        let sample = null;
-        const fns = window.context.state.fns;
+    knobs.forEach(knob => {
+      code = code.replace(`knobs.${knob}` , `parameters.${knob}[0]`)
+    });
 
-        while((typeof(sample) !== 'number' || isNaN(sample)) && fns.length > 0) {
-          try {
-            sample = fns[fns.length-1](t, [], window.context.state.knobs, persistancy);
-            if(typeof(sample) !== 'number' || isNaN(sample)){
-              console.warn('code didnt output number!');
-              fns.pop();
-            }
-          } catch (e) {
-            console.warn('code didnt work!');
-            fns.pop();
-          }
+    let knobsObject = {}
+    knobs.forEach(knob => knobsObject[knob] = this.state.knobs[knob] ? this.state.knobs[knob] : .5)
+
+    this.setState({knobs: knobsObject})
+
+    const workletStr = `
+      class Synth extends AudioWorkletProcessor {
+        static get parameterDescriptors() {
+          return [
+            ${knobs.map(knob => `{name: '${knob}', defaultValue: 0.5, minValue: 0, maxValue: 1}`)}
+          ];
         }
 
-        return sample ? sample : 0;
-        
-      }), 0)
-    };
+        process(inputs, outputs, parameters) {
+          let [output] = outputs[0];
 
-    node.connect(audioCtx.destination);
+          output.set(output.map((x, i) => {
+            ${code}
+          }))
+
+          return true;
+        }
+      }
+
+      registerProcessor('synth${this.iteration}', Synth);
+    `;
+
+    console.log(workletStr);
+    
+    this.audioContext.audioWorklet.addModule(URL.createObjectURL(new Blob([workletStr], {type: 'application/javascript'}))).then(() => {
+      if(this.audioWorklet) {
+        this.audioWorklet.disconnect();
+      }
+      this.audioWorklet = new AudioWorkletNode(this.audioContext, 'synth' + this.iteration);
+      this.updateParams()
+      this.audioWorklet.connect(this.audioContext.destination);
+    });
+  }
+
+  startAudio() {
+    this.audioContext = new AudioContext();
   }
 }
