@@ -1,17 +1,7 @@
 import React from 'react';
 import Knob from 'react-canvas-knob';
 
-
-export function Inputs(props) {
-  return (
-    <div style={{height:'100%', display: 'flex'}}>
-      <Keyboard keys={props.keys} onChange={props.onChangeKeys}/>
-      <Knobs knobs={props.knobs} onChange={props.onChangeKnobs}/>
-    </div>
-  );
-}
-
-function Keyboard(props) {
+export function Keyboard(props) {
   const {keys, onChange} = props;
 
   return(
@@ -25,7 +15,7 @@ function Keyboard(props) {
   )
 }
 
-function Knobs(props) {
+export function Knobs(props) {
   const {knobs, onChange} = props;
   console.log(Object.keys(knobs))
   

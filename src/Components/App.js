@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 
 import {CodeEditor} from './CodeEditor';
-import {Oszi} from './Oszi';
-import {Inputs} from './Inputs';
+import {Keyboard, Knobs} from './Inputs';
 
 
 export default class App extends Component {
@@ -40,19 +39,18 @@ export default class App extends Component {
               }
             }}
           />
-          <Oszi />
+          <Knobs
+            knobs={this.state.knobs} 
+            onChange={newKnobs => this.setState({knobs: newKnobs})}
+          />
         </SplitterLayout>
-        <Inputs 
-          knobs={this.state.knobs} 
-          onChangeKnobs={newKnobs => this.setState({knobs: newKnobs})}
-
+        <Keyboard
           keys={this.state.keys}
-          onChangeKeys={newKeys => this.setState({keys: newKeys})}
+          onChange={newKeys => this.setState({keys: newKeys})}
         />
       </SplitterLayout>
     );
   }
-
 
   startAudio() {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
