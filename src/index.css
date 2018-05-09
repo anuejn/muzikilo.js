@@ -4,3 +4,79 @@ html, body {
   padding: 0;
   margin: 0;
 }
+
+.keyboardNav {
+  height: 100%;
+  width: 15px;
+  text-align: center;
+  display: inline-block;
+
+  padding: 0 10px;
+  position: relative;
+  top: 25%;
+}
+
+.keyboard {
+  height: calc(100% - 25px);
+  margin: 25px;
+  margin-top: 0;
+  display: inline-block;
+}
+
+.keyboard > div {
+  display: inline-block;
+  height: calc(100% - 25px);
+  padding: 0;
+  margin: 0;
+  width: 50px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 0 0 10px 10px;
+  vertical-align: top;
+  box-shadow: 0 0 20px -7px #000;
+}
+
+.keyboard > .black {
+  background: #000;
+  height: calc(60% - 25px);;
+  width: 30px;
+  margin: 0 -16px;
+}
+
+.layout-pane {
+  overflow-y: hidden !important;
+}
+
+.knobs {
+  margin-left: 50px;
+  padding-left: 25px;
+  border-left: 1px dashed #999;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.knob {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: 10px;
+}
+
+.knob > label {
+  margin-top: -20px;
+  font-size: 12px;
+}
+
+.knob span {
+  position: absolute;
+  top: 50%;
+  text-align: center;
+  width: 100%;
+  margin-left: -100%;
+  transform: translateY(-50%);
+  color: #EA2;
+}
+
+.knob > div {
+  position: relative;
+}
