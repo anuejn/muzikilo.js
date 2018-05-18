@@ -1,6 +1,6 @@
 import React from 'react';
 import Knob from 'react-canvas-knob';
-import {subscribe2Midi} from './midi'
+import {subscribe2Midi} from './midi';
 
 export default class Knobs extends React.Component{
   constructor() {

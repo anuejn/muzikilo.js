@@ -25,6 +25,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]
+      },
+      {
+        test: /Worklet\.js$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {}
+          }
+        ]
       }
     ],
   },

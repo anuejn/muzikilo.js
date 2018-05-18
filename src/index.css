@@ -73,3 +73,26 @@ html, body {
 .knob > div {
   position: relative;
 }
+
+.editorWithError {
+  height: 100%;
+}
+
+.errorField {
+  position: absolute;
+  bottom: 0;
+  min-height: 10px;
+  width: 100%;
+  font-family: monospace;
+  padding: 10px;
+  box-sizing: border-box;
+  white-space: pre;
+}
+
+.errorField.sucess {
+  background: #608B4E;
+}
+
+.errorField.error {
+  background: #ff3333;
+}
