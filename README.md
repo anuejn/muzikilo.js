@@ -1,2 +1,5 @@
 # Synth
-A simple code driven synt for the browser
+A code driven synth for the browser
+
+
+
