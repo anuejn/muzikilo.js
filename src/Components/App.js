@@ -44,10 +44,24 @@ export default class App extends Component {
         </SplitterLayout>
         <Keyboard
           keys={this.state.keys}
-          onChange={newKeys => this.setState({keys: newKeys})}
+          onChange={this.updateNote}
         />
       </SplitterLayout>
     );
+  }
+
+  updateNote = (note, value) => {
+    if (value) {
+      this.setState({ keys: [...this.state.keys, note] })
+    } else {
+      this.setState({ keys: this.state.keys.filter(key => key !== note) })
+    }
+
+    this.port.postMessage({
+      type: 'update_note',
+      note,
+      value,
+    });
   }
 
   updateKnob = (name, value) => {
@@ -62,7 +76,7 @@ export default class App extends Component {
   }
 
   updateCode(code) {
-    this.port.postMessage({shaderFunc: `(() => function(knobs) {${code}\n})()`});
+    this.port.postMessage({shaderFunc: `(() => function(knobs, keys) {${code}\n})()`});
   }
 
   startAudio() {
