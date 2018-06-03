@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 
-import audioWorklet from './audioWorklet.js';
+import audioWorklet from '!file-loader!./audioWorklet.js';
 
 import {CodeEditor} from './CodeEditor';
 import Keyboard from './Keyboard';
@@ -28,13 +28,13 @@ export default class App extends Component {
       <SplitterLayout vertical percentage secondaryInitialSize={20}>
         <SplitterLayout percentage secondaryInitialSize={35}>
           <div className='editorWithError'>
-            <CodeEditor 
+            <CodeEditor
               onChange={newValue => this.updateCode(newValue)}
             />
             {this.state.error ? <div className='errorField error'>{this.state.error}</div> : <div className='errorField sucess'/>}
           </div>
           <Knobs
-            knobs={this.state.knobs} 
+            knobs={this.state.knobs}
             onChange={newKnobs => this.setState({knobs: newKnobs})}
           />
         </SplitterLayout>
