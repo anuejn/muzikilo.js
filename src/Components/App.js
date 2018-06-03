@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 
-import audioWorklet from './audioWorklet.js';
+import audioWorklet from '!file-loader!./audioWorklet.js';
 
 import {CodeEditor} from './CodeEditor';
 import Keyboard from './Keyboard';
@@ -13,10 +13,14 @@ export default class App extends Component {
     super();
 
     this.state = {
-      knobs: {},
+      knobs: {
+          lol: 0.5,
+          lol1: 0.5,
+          lol2: 0.5,
+          lol3: 0.5,
+      },
       keys: [],
       error: '',
-
     }
 
     this.port = null;
@@ -28,14 +32,14 @@ export default class App extends Component {
       <SplitterLayout vertical percentage secondaryInitialSize={20}>
         <SplitterLayout percentage secondaryInitialSize={35}>
           <div className='editorWithError'>
-            <CodeEditor 
+            <CodeEditor
               onChange={newValue => this.updateCode(newValue)}
             />
             {this.state.error ? <div className='errorField error'>{this.state.error}</div> : <div className='errorField sucess'/>}
           </div>
           <Knobs
-            knobs={this.state.knobs} 
-            onChange={newKnobs => this.setState({knobs: newKnobs})}
+            knobs={this.state.knobs}
+            onChange={this.updateKnob}
           />
         </SplitterLayout>
         <Keyboard
@@ -46,8 +50,19 @@ export default class App extends Component {
     );
   }
 
+  updateKnob = (name, value) => {
+    this.setState({
+      knobs: {
+        ...this.state.knobs,
+        [name]: value,
+      }
+    });
+
+    this.port.postMessage({ type: 'update_knob', name, value });
+  }
+
   updateCode(code) {
-    this.port.postMessage({shaderFunc: `(() => function() {${code}})()`});
+    this.port.postMessage({shaderFunc: `(() => function(knobs) {${code}\n})()`});
   }
 
   startAudio() {

@@ -25,15 +25,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]
-      },
-      {
-        test: /Worklet\.js$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {}
-          }
-        ]
       }
     ],
   },
@@ -44,8 +35,5 @@ module.exports = {
   plugins: [
     new MonacoWebpackPlugin(),
   ],
-  devServer: { contentBase: './' },
-  node: {
-    fs: 'empty'
-  }
+  devServer: { contentBase: './' }
 }
