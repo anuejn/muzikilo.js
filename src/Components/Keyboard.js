@@ -14,11 +14,11 @@ export default class Keyboard extends React.Component {
 
       if(cmd === 144) {
         //note on
+        this.props.onChange(key, value > 0);
       } else if (cmd === 128) {
         // note off
+        this.props.onChange(key, false);
       }
-      
-      console.log(data);
     });
   }
 

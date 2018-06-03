@@ -39,10 +39,24 @@ export default class App extends Component {
         </SplitterLayout>
         <Keyboard
           keys={this.state.keys}
-          onChange={newKeys => this.setState({keys: newKeys})}
+          onChange={this.updateNote}
         />
       </SplitterLayout>
     );
+  }
+
+  updateNote = (note, value) => {
+    if (value) {
+      this.setState({ keys: [...this.state.keys, note] })
+    } else {
+      this.setState({ keys: this.state.keys.filter(key => key !== note) })
+    }
+
+    this.port.postMessage({
+      type: 'update_note',
+      note,
+      value,
+    });
   }
 
   updateKnob = (name, value) => {
@@ -53,11 +67,18 @@ export default class App extends Component {
       }
     });
 
-    this.port.postMessage({update_knob: {name, value}});
+    this.port.postMessage({
+      type: 'update_knob',
+      name,
+      value,
+    });
   }
 
   updateCode(code) {
-    this.port.postMessage({shaderFunc: `(() => function(knobs) {${code}\n})()`});
+    this.port.postMessage({
+      type: 'shader_function',
+      func: `(() => function(knobs, keys) {${code}\n})()`,
+    });
   }
 
   startAudio() {
@@ -68,25 +89,30 @@ export default class App extends Component {
       this.port = audioWorklet.port;
 
       setInterval(() => {
-        this.port.postMessage({lowerUsage: true});
+        this.port.postMessage({
+          type: 'lower_usage'
+        });
       }, 100);
 
       this.port.onmessage = event => {
-        const {data} = event;
+        const { data } = event;
 
-        if(data.hasOwnProperty('error')) {
-          this.setState({error: data.error})
-        }
+        switch (data.type) {
+          case 'error':
+            this.setState({ error: data.error });
+            break;
+          
+          case 'require_knobs':
+            let knobs = {};
 
-        if(data.requiredKnobs) {
-          let knobs = {};
+            data.knobs.forEach(name => {
+              knobs[name] = this.state.knobs.hasOwnProperty(name) ? this.state.knobs[name] : .5;
+            });
 
-          data.requiredKnobs.forEach(name => {
-            knobs[name] = this.state.knobs.hasOwnProperty(name) ? this.state.knobs[name] : .5;
-          });
+            this.setState({ knobs });
+            break;
+        } 
 
-          this.setState({knobs});
-        }
       };
 
       audioWorklet.connect(audioContext.destination);

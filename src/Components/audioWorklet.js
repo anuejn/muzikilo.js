@@ -19,28 +19,47 @@ class Synth extends AudioWorkletProcessor {
       },
     });
 
+    this.keys = [];
+
     // allow updating of arbitrary things from the main thread
     this.port.onmessage = (event) => {
-      let {data} = event;
+      let { data } = event;
 
-      if(data.shaderFunc) {
-        try {
-          this.funcs.push(eval(data.shaderFunc));
-          this.update = true;
-        } catch(e) {
-          this.port.postMessage({error: `${e}`});
-        }
-      }
+      switch (data.type) {
+        case 'lower_usage':
+          Object.keys(this.knobUsages).forEach(key => this.knobUsages[key] = this.knobUsages[key] - 0.05);
+          Object.keys(this.knobUsages).filter(key => this.knobUsages[key] <= 0).forEach(key => {delete this.knobUsages[key]});
+          this.port.postMessage({
+            type: 'require_knobs',
+            knobs: Object.keys(this.knobUsages).filter(key => this.knobUsages[key] > .25),
+          });
+          break;
 
-      if(data.update_knob) {
-        this.knobs[data.update_knob.name] = data.update_knob.value;
-      }
+        case 'shader_function':
+          try {
+            this.funcs.push(eval(data.func));
+            this.update = true;
+          } catch(e) {
+            this.port.postMessage({ 
+              type: 'error',
+              error: `${e}`,
+            });
+          }
+          break;
 
-      if(data.lowerUsage) {
-        Object.keys(this.knobUsages).forEach(key => this.knobUsages[key] = this.knobUsages[key] - 0.05);
-        Object.keys(this.knobUsages).filter(key => this.knobUsages[key] <= 0).forEach(key => {delete this.knobUsages[key]})
-        this.port.postMessage({requiredKnobs: Object.keys(this.knobUsages).filter(key => this.knobUsages[key] > .25)})
+        case 'update_knob':
+          this.knobs[data.name] = data.value;
+          break;
+
+        case 'update_note':
+          if (data.value) {
+            this.keys = [...this.keys, data.note];
+          } else {
+            this.keys = this.keys.filter(key => key !== data.note);
+          }
+          break;
       }
+      
     };
   }
 
@@ -52,7 +71,7 @@ class Synth extends AudioWorkletProcessor {
       let firstTry = true;
       while(true) {
         try {
-          val = this.funcs[this.funcs.length - 1].call(this.shaderEnv, this.knobs);
+          val = this.funcs[this.funcs.length - 1].call(this.shaderEnv, this.knobs, this.keys);
         } catch(e) {
           // in adition to this, val will still be null
           error += `${e}\n\n`;
@@ -62,7 +81,10 @@ class Synth extends AudioWorkletProcessor {
           // we are having a nice value
           if(firstTry && this.update) {
             // clear the error message, when everything ran sucessfully
-            this.port.postMessage({error: ''});
+            this.port.postMessage({
+              type: 'error',
+              error: '',
+            });
           }
 
           this.update = false;
@@ -71,7 +93,10 @@ class Synth extends AudioWorkletProcessor {
           // whops... something failed
           error += error ? '' : `function returned: ${JSON.stringify(val)}`;
           this.funcs.pop();
-          this.port.postMessage({error: error});
+          this.port.postMessage({
+            type: 'error',
+            error,
+          });
           firstTry = false;
         }
       }
