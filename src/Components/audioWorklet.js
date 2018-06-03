@@ -10,6 +10,10 @@ class Synth extends AudioWorkletProcessor {
       get: (target, name) => target.hasOwnProperty(name) ? target[name] : 0,
     });
 
+    this.knobs = new Proxy({}, {
+      get: (target, name) => target.hasOwnProperty(name) ? target[name] : 0.5,
+    });
+
     // allow updating of arbitrary things from the main thread
     this.port.onmessage = (event) => {
       let {data} = event;
@@ -23,6 +27,13 @@ class Synth extends AudioWorkletProcessor {
         }
         console.log(this.funcs);
       }
+
+      switch (data.type) {
+        case 'update_knob': {
+          this.knobs[data.name] = data.value;
+          break;
+        }
+      }
     };
   }
 
@@ -34,7 +45,7 @@ class Synth extends AudioWorkletProcessor {
       let firstTry = true;
       while(true) {
         try {
-          val = this.funcs[this.funcs.length - 1].call(this.shaderEnv);
+          val = this.funcs[this.funcs.length - 1].call(this.shaderEnv, this.knobs);
         } catch(e) {
           // in adition to this, val will still be null
           error += `${e}\n\n`;
@@ -46,7 +57,7 @@ class Synth extends AudioWorkletProcessor {
             // clear the error message, when everything ran sucessfully
             this.port.postMessage({error: ''});
           }
-    
+
           this.update = false;
           return val
         } else {

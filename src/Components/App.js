@@ -13,10 +13,14 @@ export default class App extends Component {
     super();
 
     this.state = {
-      knobs: {},
+      knobs: {
+          lol: 0.5,
+          lol1: 0.5,
+          lol2: 0.5,
+          lol3: 0.5,
+      },
       keys: [],
       error: '',
-
     }
 
     this.port = null;
@@ -35,7 +39,7 @@ export default class App extends Component {
           </div>
           <Knobs
             knobs={this.state.knobs}
-            onChange={newKnobs => this.setState({knobs: newKnobs})}
+            onChange={this.updateKnob}
           />
         </SplitterLayout>
         <Keyboard
@@ -46,8 +50,19 @@ export default class App extends Component {
     );
   }
 
+  updateKnob = (name, value) => {
+    this.setState({
+      knobs: {
+        ...this.state.knobs,
+        [name]: value,
+      }
+    });
+
+    this.port.postMessage({ type: 'update_knob', name, value });
+  }
+
   updateCode(code) {
-    this.port.postMessage({shaderFunc: `(() => function() {${code}})()`});
+    this.port.postMessage({shaderFunc: `(() => function(knobs) {${code}\n})()`});
   }
 
   startAudio() {

@@ -20,8 +20,7 @@ export default class Knobs extends React.Component{
           this.state.mapping[knob] = this.state.active;
           this.setState({active: null, mapping: this.state.mapping});
         } else if (this.state.mapping[knob]) {
-          this.props.knobs[this.state.mapping[knob]] = value / 127;
-          this.props.onChange(this.props.knobs);
+          this.props.onChange(this.state.mapping[knob], value / 127);
         }
       }
     });
@@ -29,7 +28,7 @@ export default class Knobs extends React.Component{
 
   render() {
     const {knobs, onChange} = this.props;
-    
+
     return (
       <div className='knobs'>
         {Object.keys(knobs).map((name, i) => {
@@ -39,11 +38,10 @@ export default class Knobs extends React.Component{
                 min={0}
                 max={1}
                 step={1/127}
-                
+
                 value={knobs[name]}
                 onChange={newValue => {
-                  knobs[name] = newValue
-                  onChange(knobs)
+                  onChange(name, newValue)
                 }}
 
                 angleArc={270}
