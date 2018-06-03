@@ -13,12 +13,7 @@ export default class App extends Component {
     super();
 
     this.state = {
-      knobs: {
-          lol: 0.5,
-          lol1: 0.5,
-          lol2: 0.5,
-          lol3: 0.5,
-      },
+      knobs: {},
       keys: [],
       error: '',
     }
@@ -58,7 +53,7 @@ export default class App extends Component {
       }
     });
 
-    this.port.postMessage({ type: 'update_knob', name, value });
+    this.port.postMessage({update_knob: {name, value}});
   }
 
   updateCode(code) {
@@ -72,11 +67,25 @@ export default class App extends Component {
       const audioWorklet = new AudioWorkletNode(audioContext, 'synth');
       this.port = audioWorklet.port;
 
+      setInterval(() => {
+        this.port.postMessage({lowerUsage: true});
+      }, 100);
+
       this.port.onmessage = event => {
         const {data} = event;
 
         if(data.hasOwnProperty('error')) {
           this.setState({error: data.error})
+        }
+
+        if(data.requiredKnobs) {
+          let knobs = {};
+
+          data.requiredKnobs.forEach(name => {
+            knobs[name] = this.state.knobs.hasOwnProperty(name) ? this.state.knobs[name] : .5;
+          });
+
+          this.setState({knobs});
         }
       };
 

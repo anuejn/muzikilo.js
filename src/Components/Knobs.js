@@ -31,7 +31,7 @@ export default class Knobs extends React.Component{
 
     return (
       <div className='knobs'>
-        {Object.keys(knobs).map((name, i) => {
+        {Object.keys(knobs).length ? Object.keys(knobs).map((name, i) => {
           return (
             <div key={i} className='knob' onClick={() => this.setState({active: this.state.active === name ? null : name})}>
               <Knob
@@ -56,7 +56,7 @@ export default class Knobs extends React.Component{
               <label style={this.state.active === name ? {color: '#f77'} : {}}>{name}</label>
             </div>
           );
-        })}
+        }) : <p>Tipp: Add a knob by using 'knobs.example' in your code</p>}
       </div>
     )
   }

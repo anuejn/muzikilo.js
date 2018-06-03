@@ -10,8 +10,13 @@ class Synth extends AudioWorkletProcessor {
       get: (target, name) => target.hasOwnProperty(name) ? target[name] : 0,
     });
 
+    this.knobUsages = {}
+
     this.knobs = new Proxy({}, {
-      get: (target, name) => target.hasOwnProperty(name) ? target[name] : 0.5,
+      get: (target, name) => {
+        this.knobUsages[name] = Math.min(1, (this.knobUsages[name] || 0) + 1/44100);
+        return target.hasOwnProperty(name) ? target[name] : 0.5
+      },
     });
 
     // allow updating of arbitrary things from the main thread
@@ -25,14 +30,16 @@ class Synth extends AudioWorkletProcessor {
         } catch(e) {
           this.port.postMessage({error: `${e}`});
         }
-        console.log(this.funcs);
       }
 
-      switch (data.type) {
-        case 'update_knob': {
-          this.knobs[data.name] = data.value;
-          break;
-        }
+      if(data.update_knob) {
+        this.knobs[data.update_knob.name] = data.update_knob.value;
+      }
+
+      if(data.lowerUsage) {
+        Object.keys(this.knobUsages).forEach(key => this.knobUsages[key] = this.knobUsages[key] - 0.05);
+        Object.keys(this.knobUsages).filter(key => this.knobUsages[key] <= 0).forEach(key => {delete this.knobUsages[key]})
+        this.port.postMessage({requiredKnobs: Object.keys(this.knobUsages).filter(key => this.knobUsages[key] > .25)})
       }
     };
   }
