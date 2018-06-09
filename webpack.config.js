@@ -1,4 +1,5 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const MonacoEditorSrc = path.join(__dirname, '..', 'src');
@@ -11,10 +12,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.html$/,
-        use: ['file?name=[name].[ext]'],
-      },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -32,6 +29,10 @@ module.exports = {
   },
   plugins: [
     new MonacoWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'muzikilo.js',
+      template: 'index.html'
+    }),
   ],
   devServer: { contentBase: './' }
 }

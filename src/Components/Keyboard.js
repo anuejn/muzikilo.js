@@ -5,8 +5,6 @@ export default class Keyboard extends React.Component {
   constructor() {
     super();
 
-    const freq = noteNumber => (440 / 32) * (2 ^ ((noteNumber - 9) / 12));
-
     subscribe2Midi(e => {
       const { data } = e;
       const [cmd, key, value] = data;
