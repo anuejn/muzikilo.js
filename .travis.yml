@@ -4,8 +4,12 @@ node_js:
 cache:
   directories:
     - node_modules
+
+# prepare deployment
+after_success: yarn build
+
+# deploy to github pages
 deploy:
-  before_script: yarn build
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
