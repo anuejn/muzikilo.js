@@ -9,6 +9,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot --progress --colors --port 8886",
     "build": "webpack -p --progress --colors",
+    "build:ci": "webpack -p --colors",
     "format": "prettier --write 'src/**/*.{js,jsx}'",
     "test": "echo 'never mind…'"
   },
