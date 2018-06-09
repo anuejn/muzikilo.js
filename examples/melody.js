@@ -20,14 +20,14 @@ const melody = osc('melody', fs[Math.floor(this.t*2 % fs.length)])
 
 // build the beat
 const beatPattern = 'xxx  x x'
-const beat = lowPass('asdf', 
-    Math.random() 
+const beat = lowPass('asdf',
+    Math.random()
     * (1-this.t*6%1) // modulate the volume
     * (beatPattern[Math.floor(this.t * 3 % beatPattern.length)] === 'x' ? 1 : 0) // do the beat or not according to the pattern
 , 10)
 
 // final mixing
 return (
-    melody 
+    melody
     + beat * .5
 )
