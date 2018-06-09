@@ -21,17 +21,33 @@ export default class Keyboard extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.ref.scrollLeft = 100000000; // scrollLeft will clip at its width
+    this.ref.scrollLeft /= 2;
+  }
+
   render() {
     const { keys, onChange } = this.props;
 
     const octave = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
-    const keyPatternList = Array.from(Array(octave.length * 6).keys()).map(
+    const keyPatternList = Array.from(Array(octave.length * 10).keys()).map(
       x => octave[x % octave.length]
     );
 
     return (
-      <div className="keyboard">
-        {keyPatternList.map((x, i) => <div className={x ? 'black' : 'white'} key={i} />)}
+      <div className="keyboard" ref={ref => this.ref = ref}>
+        {keyPatternList.map((x, i) => 
+          <div 
+            key={i} 
+            className={(x ? 'black' : 'white') + ' ' + (keys.includes(i) ? 'active' : 'passive')} 
+            onMouseDown={() => onChange(i, true)} 
+            onMouseEnter={e => e.buttons === 1 ? onChange(i, true) : null} 
+            onMouseUp={() => onChange(i, false)}
+            onMouseLeave={() => onChange(i, false)}
+          >
+            <span>{i}</span>
+          </div>
+        )}
       </div>
     );
   }
