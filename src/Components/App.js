@@ -79,6 +79,10 @@ export default class App extends Component {
   startAudio() {
     const audioContext = new AudioContext();
 
+    if(!(audioContext && audioContext.audioWorklet)) {
+      alert('You need chrome 66+ to use muzikilo.js!')
+    }
+
     audioContext.createBuffer(1, 128, 44100);
     audioContext.audioWorklet.addModule(audioWorklet).then(() => {
       const audioWorklet = new AudioWorkletNode(audioContext, 'synth');
