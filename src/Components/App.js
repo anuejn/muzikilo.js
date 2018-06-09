@@ -42,9 +42,9 @@ export default class App extends Component {
 
   updateNote = (note, value) => {
     if (value) {
-      this.setState({ keys: [...this.state.keys, note] });
+      this.setState(state => ({ keys: [...state.keys, note] }));
     } else {
-      this.setState({ keys: this.state.keys.filter(key => key !== note) });
+      this.setState(state => ({ keys: state.keys.filter(key => key !== note) }));
     }
 
     this.port.postMessage({

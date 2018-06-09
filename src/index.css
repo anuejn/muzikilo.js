@@ -14,7 +14,6 @@ html, body {
 }
 
 .keyboard > div {
-  display: inline-block;
   flex-shrink: 0;
   height: calc(100% - 20px);
   padding: 0;
@@ -24,13 +23,43 @@ html, body {
   border-radius: 0 0 10px 10px;
   vertical-align: top;
   box-shadow: 0 0 20px -7px #000;
+  
+  display: flex;
+  justify-content: space-around;
+}
+
+.keyboard > div > span {
+  margin-top: auto;
+  margin-bottom: 10px;
+  user-select: none;
+  transition: opacity .5s;
+  opacity: 0;
+  font-size: 11px;
+}
+
+.keyboard > div.active > span {
+  opacity: 1;
 }
 
 .keyboard > .black {
-  background: #000;
+  background-color: #000;
   height: calc(61.8% - 20px);
   width: 30px;
   margin: 0 -16px;
+  z-index: 1;
+  color: #fff;
+}
+
+.keyboard > .active {
+  background-color: #569CD6;
+}
+
+.keyboard > .passive {
+  transition: background-color 1s;
+}
+
+.keyboard > .active.black {
+  background-color: #264F78;
 }
 
 .layout-pane {
