@@ -28,10 +28,12 @@ module.exports = {
     alias: { 'src/react-monaco-editor': MonacoEditorSrc }
   },
   plugins: [
-    new MonacoWebpackPlugin(),
+    new MonacoWebpackPlugin({
+      languages: [],
+    }),
     new HtmlWebpackPlugin({
       title: 'muzikilo.js',
-      template: 'index.html'
+      template: 'index.html',
     }),
   ],
   devServer: { contentBase: './' }
