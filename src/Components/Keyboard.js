@@ -22,7 +22,8 @@ export default class Keyboard extends React.Component {
   }
 
   componentDidMount() {
-    this.ref.scrollLeft = 100000000; // scrollLeft will clip at its width
+    // center scrollbar by scrolling to end and dividing by 2
+    this.ref.scrollLeft = 100000000;
     this.ref.scrollLeft /= 2;
   }
 
