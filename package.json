@@ -7,8 +7,9 @@
   "author": "anuejn",
   "license": "AGPL-3.0",
   "scripts": {
-    "start": "webpack-dev-server --hot --progress --colors --port 8886",
+    "start": "webpack-dev-server -d --hot --progress --colors --port 8886",
     "build": "webpack -p --progress --colors",
+    "build:ci": "webpack -p --colors",
     "format": "prettier --write 'src/**/*.{js,jsx}'",
     "test": "echo 'never mind…'"
   },

@@ -6,7 +6,7 @@ cache:
     - node_modules
 
 # prepare deployment
-after_success: yarn build
+after_success: yarn build:ci
 
 # deploy to github pages
 deploy:
