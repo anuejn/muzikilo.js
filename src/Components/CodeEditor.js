@@ -5,8 +5,8 @@ export class CodeEditor extends React.Component {
   constructor() {
     super();
     this.state = {
-      code: `return 0`
-    }
+      code: `return 0`,
+    };
   }
 
   render() {
@@ -15,12 +15,15 @@ export class CodeEditor extends React.Component {
         language="javascript"
         theme="vs-dark"
         value={this.state.code}
-        onChange={(newValue) => {this.setState({code: newValue}); this.props.onChange(newValue)}}
-        editorDidMount={(editor) => {
+        onChange={newValue => {
+          this.setState({ code: newValue });
+          this.props.onChange(newValue);
+        }}
+        editorDidMount={editor => {
           editor.focus();
           setTimeout(() => this.props.onChange(this.state.code), 0);
         }}
-        options={{automaticLayout: true}}
+        options={{ automaticLayout: true }}
       />
     );
   }
