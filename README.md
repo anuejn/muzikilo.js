@@ -14,7 +14,7 @@ Digital music is made of samples and samples are just numbers. Numbers can easil
 1. Live coding is nice
 
 ## How?
-Go to [anujen.github.io/muzikilo.js](https://anujen.github.io/muzikilo.js) and play.
+Go to [anuejn.github.io/muzikilo.js](https://anuejn.github.io/muzikilo.js) and play.
 To get started, you can look at some [examples](examples/) or consult the [wiki](https://github.com/anuejn/muzikilo.js/wiki)
 
 ## Contribute
