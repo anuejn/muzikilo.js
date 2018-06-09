@@ -29,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new MonacoWebpackPlugin({
-      languages: [],
+      languages: ['typescript'],
     }),
     new HtmlWebpackPlugin({
       title: 'muzikilo.js',
