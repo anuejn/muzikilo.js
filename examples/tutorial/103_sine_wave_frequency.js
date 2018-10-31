@@ -23,7 +23,7 @@ function expScale(knob, min, max) {
 // See https://en.wikipedia.org/wiki/C_(musical_note)#Designation_by_octave
 const frequency = expScale(knobs['Frequency'], 261.626, 1046.502)
 
-return knobs['Master volume'] * sin(frequency * t)
+return knobs['Master volume'] * sin(frequency * this.t)
 
 // When changing the Frequency knob, the loud speaker makes a crackling noise.
 // This is because the phase of the sine curve may be completely different.
