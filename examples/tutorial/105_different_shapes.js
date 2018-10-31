@@ -47,7 +47,7 @@ const squareOut   =   square(this.phase) * knobs['Square volume']
 //
 // See https://en.wikipedia.org/wiki/Clipping_(audio)
 //
-const out = (sineOut + sawtoothOut + squareOut)
+const out = sineOut + sawtoothOut + squareOut
 
 // The factor 2 in the below formula increases the clipping.
 return 2 * out * knobs['Master volume']

@@ -10,5 +10,5 @@ function sin(phi) {
 // displays some knobs.
 //
 // To define a knob, write knobs['The name of the knob'].
-// Such an expression returns a value between 0.0 and 1.0.
+// Such a knob expression always returns a value between 0.0 and 1.0.
 return knobs['Master volume'] * sin(440 * this.t)

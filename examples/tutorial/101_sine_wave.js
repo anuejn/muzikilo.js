@@ -9,10 +9,11 @@
 
 // Each time this code is called, the fraction 1 / 44100 is added
 // to the variable t. Since this code is called 44100 times per second,
-// the variable t always contains the total time passed in seconds.
+// the variable t always contains the total elapsed time in seconds.
+// In computer music, t is a well-known abbreviation for the elapsed time.
 //
 // All variables of the form "this.X = ..." are remembered permanently.
-// By contrast, variables that use the "const X = ..." are only available
+// By contrast, variables of the form "const X = ..." are only available
 // for generating a single sample, and are thrown away afterwards.
 this.t += 1 / 44100
 
@@ -20,13 +21,13 @@ this.t += 1 / 44100
 // to the loud speaker. (There are other, more aggressive functions
 // out there, to be introduced later.)
 //
+// See https://en.wikipedia.org/wiki/Sine
+//
 // In school, the sine function is often introduced as sin(degree), where
 // degree varies from 0 degrees to 360 degrees for generating one full wave.
 // In computing, a different range is used. It goes from 0 to 2 * π.
 // Finally, when generating music, it is most convenient to use the range
 // from 0 to 1, because these numbers are so simple and universal.
-//
-// See https://en.wikipedia.org/wiki/Sine
 //
 // Therefore, the sin function defined here uses the convenient range,
 // converting it to the range that the classical sine function expects.
@@ -34,7 +35,7 @@ function sin(phi) {
   return Math.sin(2 * Math.PI * phi)
 }
 
-// To generate a sine wave, the time that has passed until now is multiplied
+// To generate a sine wave, the time that has elapsed until now is multiplied
 // by the frequency of the tone. The higher the frequency, the higher the
 // tone sounds.
 //
