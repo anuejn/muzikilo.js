@@ -24,7 +24,7 @@ export default class App extends Component {
   render() {
     return (
       <SplitterLayout vertical percentage secondaryInitialSize={20}>
-        <SplitterLayout percentage secondaryInitialSize={35}>
+        <SplitterLayout percentage secondaryInitialSize={25}>
           <div className="editorWithError">
             <CodeEditor onChange={newValue => this.updateCode(newValue)} />
             {this.state.error ? (
@@ -72,7 +72,17 @@ export default class App extends Component {
   updateCode(code) {
     this.port.postMessage({
       type: 'shader_function',
-      func: `(() => function(knobs, keys) {${code}\n})()`,
+      func: `(
+        function(knobs, keys) {
+          const random = () => Math.random() * 2 - 1;
+          const {sin, floor, round, pow} = Math;
+          const TAU = 2 * Math.PI;
+          this.t += 1/44100;
+          const t = this.t;
+
+          ${code}\n
+        }
+      )`,
     });
   }
 

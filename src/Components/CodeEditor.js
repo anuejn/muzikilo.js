@@ -1,11 +1,12 @@
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
+import initial_code from '!raw-loader!../../examples/initial_editor_content.js'
 
 export class CodeEditor extends React.Component {
   constructor() {
     super();
     this.state = {
-      code: `return 0`,
+      code: initial_code,
     };
   }
 

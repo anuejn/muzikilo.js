@@ -7,7 +7,9 @@ class Synth extends AudioWorkletProcessor {
 
     // initialize the environment for the shaderFunc
     this.shaderEnv = new Proxy(
-      {},
+      {
+        t: +new Date() / 1000,
+      },
       {
         get: (target, name) => (target.hasOwnProperty(name) ? target[name] : 0),
       }
@@ -76,6 +78,7 @@ class Synth extends AudioWorkletProcessor {
 
   process(inputs, outputs) {
     let [output] = outputs[0];
+
     output.set(
       output.map(() => {
         let val = null;
@@ -83,9 +86,9 @@ class Synth extends AudioWorkletProcessor {
         let firstTry = true;
         while (true) {
           try {
-            val = this.funcs[this.funcs.length - 1].call(this.shaderEnv, this.knobs, this.keys);
+            val = this.funcs[this.funcs.length - 1].apply(this.shaderEnv, [this.knobs, this.keys]);
           } catch (e) {
-            // in adition to this, val will still be null
+            // in adition to this exception, val will still be null
             error += `${e}\n\n`;
           }
 
