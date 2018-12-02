@@ -8,7 +8,7 @@ class Synth extends AudioWorkletProcessor {
     // initialize the environment for the shaderFunc
     this.shaderEnv = new Proxy(
       {
-        t: +new Date() / 1000,
+        t: new Date() / 1000,
       },
       {
         get: (target, name) => (target.hasOwnProperty(name) ? target[name] : 0),
