@@ -9,12 +9,29 @@ class Synth extends AudioWorkletProcessor {
     this.shaderEnv = new Proxy(
       {},
       {
-        get: (target, name) => (target.hasOwnProperty(name) ? target[name] : 0),
+        get: (target, name) => {
+          // when the target variable is not yet set, we just return numeric 0
+          // this allows us for example to create a counter with 'this.i += 1' without special casing the first iteration.
+          if (!target.hasOwnProperty(name)) {
+            return 0;
+          }
+
+          // some values are most likely temporary mistakes.
+          // we filter them out and return 0 instead, to save the developer some frustration.
+          if (
+            target[name] == null ||
+            (typeof target[name] == 'number' && !isFinite(target[name]))
+          ) {
+            return 0;
+          }
+
+          // if the value seems legit, we just return it
+          return target[name];
+        },
       }
     );
 
     this.knobUsages = {};
-
     this.knobs = new Proxy(
       {},
       {
