@@ -5,6 +5,7 @@ import 'react-splitter-layout/lib/index.css';
 import { CodeEditor } from './CodeEditor';
 import Keyboard from './Keyboard';
 import Knobs from './Knobs';
+import { FileDropZone } from './FileDropZone';
 
 const audioWorklet = require('fs').readFileSync(__dirname + '/../audioWorklet.js', 'utf-8');
 
@@ -18,6 +19,7 @@ export default class App extends Component {
       knobs: {},
       keys: [],
       error: '',
+      samples: {}
     };
 
     this.port = {
@@ -39,6 +41,7 @@ export default class App extends Component {
     );
 
     return (
+<<<<<<< HEAD
       <>
         {this.state.initialized ? <></> : overlay}
         <SplitterLayout vertical percentage secondaryInitialSize={20}>
@@ -54,6 +57,22 @@ export default class App extends Component {
             <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
           </SplitterLayout>
           <Keyboard keys={this.state.keys} onChange={this.updateNote} />
+=======
+      <SplitterLayout vertical percentage secondaryInitialSize={15}>
+        <SplitterLayout percentage secondaryInitialSize={25}>
+          <div className="editorWithError">
+            <CodeEditor onChange={newValue => this.updateCode(newValue)} />
+            {this.state.error ? (
+              <div className="errorField error">{this.state.error}</div>
+            ) : (
+              <div className="errorField sucess" />
+            )}
+          </div>
+          <SplitterLayout vertical percentage secondaryInitialSize={15} className="inputs">
+            <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
+            <FileDropZone onAdd={(name, samples) => this.setState({samples: {name: samples, ...this.state.samples}})}/>
+          </SplitterLayout>
+>>>>>>> c55bc1b... begin working on file input
         </SplitterLayout>
       </>
     );
@@ -89,6 +108,7 @@ export default class App extends Component {
   };
 
   updateCode(code) {
+    if(!this.port) return;
     this.port.postMessage({
       type: 'shader_function',
       func: `(
@@ -103,7 +123,11 @@ export default class App extends Component {
     const audioContext = new AudioContext();
 
     if (!(audioContext && audioContext.audioWorklet)) {
+<<<<<<< HEAD
       alert('Your Browser seems to be unsupported :(');
+=======
+      alert('You need chrome 66+ to use muzikilo.js!');
+>>>>>>> c55bc1b... begin working on file input
     }
 
     audioContext.createBuffer(1, 128, 44100);
