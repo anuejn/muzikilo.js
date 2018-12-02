@@ -34,19 +34,19 @@ export default class Keyboard extends React.Component {
     );
 
     return (
-      <div className="keyboard" ref={ref => this.ref = ref}>
-        {keyPatternList.map((x, i) => 
-          <div 
-            key={i} 
-            className={(x ? 'black' : 'white') + ' ' + (keys.includes(i) ? 'active' : 'passive')} 
-            onMouseDown={() => onChange(i, true)} 
-            onMouseEnter={e => e.buttons === 1 ? onChange(i, true) : null} 
+      <div className="keyboard" ref={ref => (this.ref = ref)}>
+        {keyPatternList.map((x, i) => (
+          <div
+            key={i}
+            className={(x ? 'black' : 'white') + ' ' + (keys.includes(i) ? 'active' : 'passive')}
+            onMouseDown={() => onChange(i, true)}
+            onMouseEnter={e => (e.buttons === 1 ? onChange(i, true) : null)}
             onMouseUp={() => onChange(i, false)}
             onMouseLeave={() => onChange(i, false)}
           >
             <span>{i}</span>
           </div>
-        )}
+        ))}
       </div>
     );
   }
