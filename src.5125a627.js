@@ -115,4 +115,4 @@ function r(){return module.exports=r=Object.assign||function(r){for(var t=1;t<ar
 },{"react":"HdMw","react-splitter-layout":"atyB","react-splitter-layout/lib/index.css":"s8eH","./CodeEditor":"Lls1","./Keyboard":"ob4h","./Knobs":"TlaS","fs":"s8eH"}],"H99C":[function(require,module,exports) {
 "use strict";var e=u(require("react")),r=u(require("react-dom"));require("./index.css");var t=u(require("./Components/App"));function u(e){return e&&e.__esModule?e:{default:e}}r.default.render(e.default.createElement(t.default,null),document.getElementById("root"));
 },{"react":"HdMw","react-dom":"X9zx","./index.css":"s8eH","./Components/App":"zvfP"}]},{},["H99C"], null)
-//# sourceMappingURL=/src.5125a627.js.map
+//# sourceMappingURL=src.5125a627.js.map
