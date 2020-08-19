@@ -7,7 +7,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "start": "mkdir -p dist/ && cp -r node_modules/monaco-editor/min/vs dist/monaco && parcel index.html",
-    "build": "mkdir -p dist/ && cp -r node_modules/monaco-editor/min/vs dist/monaco && parcel build index.html",
+    "build": "mkdir -p dist/ && cp -r node_modules/monaco-editor/min/vs dist/monaco && parcel build --public-url \"./\" index.html",
     "format": "prettier --write 'src/**/*.{js,jsx}'",
     "test": "echo 'never mind…'"
   },
