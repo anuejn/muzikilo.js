@@ -1,30 +1,32 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
-import initial_code from '!raw-loader!../../examples/initial_editor_content.js'
+import { ControlledEditor } from '@monaco-editor/react';
+import { monaco } from '@monaco-editor/react';
+
+const initialCode = require('fs').readFileSync(
+  __dirname + '/../../examples/initial_editor_content.js',
+  'utf-8'
+);
 
 export class CodeEditor extends React.Component {
   constructor() {
+    monaco.config({
+      paths: {
+        vs: './monaco/',
+      },
+    });
+
     super();
-    this.state = {
-      code: initial_code,
-    };
   }
 
   render() {
     return (
-      <MonacoEditor
+      <ControlledEditor
         language="javascript"
         theme="vs-dark"
-        value={this.state.code}
-        onChange={newValue => {
-          this.setState({ code: newValue });
+        value={initialCode}
+        onChange={(event, newValue) => {
           this.props.onChange(newValue);
         }}
-        editorDidMount={editor => {
-          editor.focus();
-          setTimeout(() => this.props.onChange(this.state.code), 0);
-        }}
-        options={{ automaticLayout: true }}
       />
     );
   }

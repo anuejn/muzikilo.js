@@ -2,3 +2,5 @@ node_modules/
 dist/
 .cache/
 out/
+.idea/
+.parcel-cache/

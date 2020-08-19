@@ -1,42 +1,64 @@
 import React, { Component } from 'react';
 import SplitterLayout from 'react-splitter-layout';
-
-import audioWorklet from '!file-loader!./audioWorklet.js';
+import 'react-splitter-layout/lib/index.css';
 
 import { CodeEditor } from './CodeEditor';
 import Keyboard from './Keyboard';
 import Knobs from './Knobs';
+
+const audioWorklet = require('fs').readFileSync(__dirname + '/../audioWorklet.js', 'utf-8');
 
 export default class App extends Component {
   constructor() {
     super();
 
     this.state = {
+      initialized: false,
       knobs: {},
       keys: [],
       error: '',
     };
 
-    this.port = null;
-    this.startAudio();
+    this.port = {
+      postMessage: payload =>
+        console.warn(
+          'Message to webaudio worklet is discarded since it is not yet initialized. Payload was: ',
+          payload
+        ),
+    };
   }
 
   render() {
+    const overlay = (
+      <div
+        className={'play_overlay'}
+        onClick={() => {
+          this.startAudio();
+          this.setState({ initialized: true });
+        }}
+      >
+        &#9658;
+      </div>
+    );
+
     return (
-      <SplitterLayout vertical percentage secondaryInitialSize={20}>
-        <SplitterLayout percentage secondaryInitialSize={25}>
-          <div className="editorWithError">
-            <CodeEditor onChange={newValue => this.updateCode(newValue)} />
-            {this.state.error ? (
-              <div className="errorField error">{this.state.error}</div>
-            ) : (
-              <div className="errorField sucess" />
-            )}
-          </div>
-          <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
+      <>
+        {this.state.initialized ? <></> : overlay}
+        <SplitterLayout vertical percentage secondaryInitialSize={20}>
+          <SplitterLayout percentage secondaryInitialSize={25}>
+            <div className="editorWithError">
+              <CodeEditor onChange={newValue => this.updateCode(newValue)} />
+              {this.state.error ? (
+                <div className="errorField error">{this.state.error}</div>
+              ) : (
+                <div className="errorField sucess" />
+              )}
+            </div>
+            <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
+          </SplitterLayout>
+          <Keyboard keys={this.state.keys} onChange={this.updateNote} />
         </SplitterLayout>
-        <Keyboard keys={this.state.keys} onChange={this.updateNote} />
-      </SplitterLayout>
+      </>
     );
   }
 
@@ -94,7 +116,10 @@ export default class App extends Component {
     }
 
     audioContext.createBuffer(1, 128, 44100);
-    audioContext.audioWorklet.addModule(audioWorklet).then(() => {
+    const workletCodeUrl = URL.createObjectURL(
+      new Blob([audioWorklet], { type: 'text/javascript' })
+    );
+    audioContext.audioWorklet.addModule(workletCodeUrl).then(() => {
       const audioWorklet = new AudioWorkletNode(audioContext, 'synth');
       this.port = audioWorklet.port;
 
