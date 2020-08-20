@@ -11,6 +11,7 @@
  *
  * To get you started there is a nice Tutorial at (ctrl+click to follow the link)
  * http://anuejn.github.io/muzikilo.js/?load=https://raw.githubusercontent.com/anuejn/muzikilo.js/master/tutorial/101_sine_wave.js
+ * Alternatively you can discover what others have done in the wiki (https://github.com/anuejn/muzikilo.js/wiki)
  */
 
 this.t += 1/44100;
