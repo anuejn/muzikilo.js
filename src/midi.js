@@ -7,8 +7,10 @@ export function subscribe2Midi(fn) {
       .then(onMIDISuccess, () => console.log('Midi Failure'));
   }
 
-  function onMIDISuccess(midiAccess) {
-    var inputs = midiAccess.inputs.values();
+  function onMIDISuccess(midi) {
+    midi.addEventListener('statechange', (event) => onMIDISuccess(midi));
+
+    var inputs = midi.inputs.values();
     for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
       input.value.onmidimessage = fn;
     }
