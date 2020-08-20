@@ -1,7 +1,7 @@
 # muzikilo.js
 A code driven synth for the browser
 
-![screenshot](examples/screenshot.png)
+![screenshot](assets/screenshot.png)
 
 ## What?
 A tool for making music in the Browser with javascript.

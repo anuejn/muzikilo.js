@@ -1,6 +1,6 @@
 import React from 'react';
 import Knob from './Knob';
-import { subscribe2Midi } from './midi';
+import { subscribe2Midi } from '../midi';
 
 export default class Knobs extends React.Component {
   constructor() {

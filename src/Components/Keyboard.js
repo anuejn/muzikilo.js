@@ -1,5 +1,5 @@
 import React from 'react';
-import { subscribe2Midi } from './midi';
+import { subscribe2Midi } from '../midi';
 
 export default class Keyboard extends React.Component {
   constructor() {

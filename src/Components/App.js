@@ -96,12 +96,6 @@ export default class App extends Component {
       type: 'shader_function',
       func: `(
         function(knobs, keys) {
-          const random = () => Math.random() * 2 - 1;
-          const {sin, floor, round, pow} = Math;
-          const TAU = 2 * Math.PI;
-          this.t += 1/44100;
-          const t = this.t;
-
           ${code}\n
         }
       )`,
@@ -112,7 +106,7 @@ export default class App extends Component {
     const audioContext = new AudioContext();
 
     if (!(audioContext && audioContext.audioWorklet)) {
-      alert('You need chrome 66+ to use muzikilo.js!');
+      alert('Your Browser seems to be unsupported :(');
     }
 
     audioContext.createBuffer(1, 128, 44100);

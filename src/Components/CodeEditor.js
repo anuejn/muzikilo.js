@@ -3,7 +3,7 @@ import { ControlledEditor } from '@monaco-editor/react';
 import { monaco } from '@monaco-editor/react';
 
 const initialCode = require('fs').readFileSync(
-  __dirname + '/../../examples/initial_editor_content.js',
+  __dirname + '/../../assets/initial_editor_content.js',
   'utf-8'
 );
 
