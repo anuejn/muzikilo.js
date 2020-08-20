@@ -22,6 +22,6 @@ return knobs['Master volume'] * sin(440 * this.t)
 
 //////////////////////////////////////////////////////////////////////
 // -> now move on to the next chapter                               //
-// (http://anuejn.github.io/muzikilo.js/?load=https://raw.githubusercontent.com/anuejn/muzikilo.js/master/tutorial/103_sine_frequency.js)
+// (http://anuejn.github.io/muzikilo.js/?load=https://raw.githubusercontent.com/anuejn/muzikilo.js/master/tutorial/103_sine_wave_frequency.js)
 //////////////////////////////////////////////////////////////////////
 
