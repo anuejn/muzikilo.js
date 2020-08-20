@@ -14,17 +14,14 @@ export default class App extends Component {
 
     this.state = {
       initialized: false,
+      messageQueue: [],
       knobs: {},
       keys: [],
       error: '',
     };
 
     this.port = {
-      postMessage: payload =>
-        console.warn(
-          'Message to webaudio worklet is discarded since it is not yet initialized. Payload was: ',
-          payload
-        ),
+      postMessage: payload => this.setState(state => ({messageQueue: [...state.messageQueue, payload]}))
     };
   }
 
@@ -142,6 +139,8 @@ export default class App extends Component {
             break;
         }
       };
+
+      this.state.messageQueue.forEach(message => this.port.postMessage(message))
 
       audioWorklet.connect(audioContext.destination);
     });

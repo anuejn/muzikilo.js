@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////////////////
+// Welcome to the muzikilo.js tutorial chapter one                  //
+// This tutorial will walk you through the very basics of making    //
+// noise / music with javascript & muzikilo.js. Have fun :)         //
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////// Chapter One Part Four ///////////////////////
 // Demonstrates how different wave shapes sound.
 // The sine wave sounds soft, while the sawtooth and square waves
 // sounds sharp.
@@ -51,3 +58,10 @@ const out = sineOut + sawtoothOut + squareOut
 
 // The factor 2 in the below formula increases the clipping.
 return 2 * out * knobs['Master volume']
+
+//////////////////////////////////////////////////////////////////////
+// You are done with the first chapter of the muzikilo.js tutorial  //
+// Currently, there is only one chapter ;). Feel free to write the //
+// next or just explore :)                                         //
+// (https://github.com/anuejn/muzikilo.js/wiki)                    //
+//////////////////////////////////////////////////////////////////////

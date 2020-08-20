@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////////////////
+// Welcome to the muzikilo.js tutorial chapter one                  //
+// This tutorial will walk you through the very basics of making    //
+// noise / music with javascript & muzikilo.js. Have fun :)         //
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////// Chapter One Part Three //////////////////////
 // Generates a sine wave.
 // The frequency and volume can be controlled by knobs.
 
@@ -43,3 +50,10 @@ return knobs['Master volume'] * sin(frequency * this.t)
 //
 // The follow-up example program will correct this problem by keeping track
 // of the current phase of the sine wave instead of the total elapsed time.
+
+
+//////////////////////////////////////////////////////////////////////
+// -> now move on to the next chapter                               //
+// (http://anuejn.github.io/muzikilo.js/?load=https://raw.githubusercontent.com/anuejn/muzikilo.js/master/tutorial/104_sine_phase.js)
+//////////////////////////////////////////////////////////////////////
+

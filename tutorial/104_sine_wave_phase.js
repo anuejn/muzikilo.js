@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////////////////
+// Welcome to the muzikilo.js tutorial chapter one                  //
+// This tutorial will walk you through the very basics of making    //
+// noise / music with javascript & muzikilo.js. Have fun :)         //
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////// Chapter One Part Four ///////////////////////
 // Generates a sine wave. The frequency and amplitude can be controlled
 // by knobs. In contrast to the previous example program, changing the
 // frequency doesn't produce a cracking noise.
@@ -25,3 +32,8 @@ const frequency = expScale(knobs['Frequency'], 261.626, 1046.502)
 this.phase = (this.phase + frequency / 44100) % 1
 
 return sin(this.phase) * knobs['Master volume']
+
+//////////////////////////////////////////////////////////////////////
+// -> now move on to the next chapter                               //
+// (http://anuejn.github.io/muzikilo.js/?load=https://raw.githubusercontent.com/anuejn/muzikilo.js/master/tutorial/105_different_shapes.js)
+//////////////////////////////////////////////////////////////////////
