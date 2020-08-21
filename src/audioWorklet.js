@@ -45,6 +45,7 @@ class Synth extends AudioWorkletProcessor {
     );
 
     this.keys = [];
+    this.files = {}
 
     // allow updating of arbitrary things from the main thread
     this.port.onmessage = event => {
@@ -68,18 +69,32 @@ class Synth extends AudioWorkletProcessor {
 
         case 'shader_function':
           try {
-            this.funcs.push(eval(data.func));
+            this.funcs.push(eval(
+              `(
+                  function(knobs, keys, files) {
+                    ${data.code}\n
+                  }
+                )`
+            ));
             this.update = true;
           } catch (e) {
             this.port.postMessage({
               type: 'error',
-              error: `${e}`,
+              error: `${e}`,Q
             });
           }
           break;
 
         case 'update_knob':
           this.knobs[data.name] = data.value;
+          break;
+
+        case 'update_file':
+          this.files[data.name] = new Proxy(
+            data.value,
+            {
+              get: (target, key) => target[Math.round((key * 44100) % target.length)],
+            })
           break;
 
         case 'update_note':
@@ -103,16 +118,16 @@ class Synth extends AudioWorkletProcessor {
         let firstTry = true;
         while (true) {
           try {
-            val = this.funcs[this.funcs.length - 1].apply(this.shaderEnv, [this.knobs, this.keys]);
+            val = this.funcs[this.funcs.length - 1].apply(this.shaderEnv, [this.knobs, this.keys, this.files]);
           } catch (e) {
-            // in adition to this exception, val will still be null
+            // in addition to this exception, val will still be null
             error += `${e}\n\n`;
           }
 
           if (typeof val === 'number' && isFinite(val)) {
             // we are having a nice value
             if (firstTry && this.update) {
-              // clear the error message, when everything ran sucessfully
+              // clear the error message, when everything ran successfully
               this.port.postMessage({
                 type: 'error',
                 error: '',
@@ -123,7 +138,7 @@ class Synth extends AudioWorkletProcessor {
             return val;
           } else {
             // whops... something failed
-            error += error ? '' : `function returned: ${JSON.stringify(val)}`;
+            error += error ? '' : `function returned: some illegal value. the returned value needs to be a number`;
             this.funcs.pop();
             this.port.postMessage({
               type: 'error',

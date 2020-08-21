@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   box-sizing: border-box;
   font-family: sans-serif;
@@ -23,7 +27,8 @@ html, body {
   padding: 0 25px;
   margin-top: 0;
   display: flex;
-  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .keyboard > div {
@@ -56,7 +61,7 @@ html, body {
 
 .keyboard > .black {
   background-color: #000;
-  height: calc(61.8% - 20px);
+  height: calc(61.8% - 15px);
   width: 30px;
   margin: 0 -16px;
   z-index: 1;
@@ -77,6 +82,7 @@ html, body {
 
 .layout-pane {
   overflow-y: hidden !important;
+  height: 100%;
 }
 
 .knobs {
@@ -88,8 +94,8 @@ html, body {
   justify-content: space-evenly;
 }
 
-.knobs > p {
-  padding: 30px;
+p, label {
+  padding: 0 30px;
   color: lightgray;
   margin: auto;
   text-align: center;
@@ -144,3 +150,4 @@ html, body {
 .errorField.error {
   background: #ff3333;
 }
+

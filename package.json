@@ -18,8 +18,10 @@
   "dependencies": {
     "@monaco-editor/react": "^3.6.2",
     "monaco-editor": "^0.20.0",
-    "react": "^16.10.2",
+    "react": "^16.x",
     "react-dom": "^16.10.2",
+    "react-dropzone": "^11.0.3",
+    "react-monaco-editor": "^0.39.1",
     "react-splitter-layout": "^4.0.0"
   }
 }

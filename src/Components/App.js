@@ -5,6 +5,8 @@ import 'react-splitter-layout/lib/index.css';
 import { CodeEditor } from './CodeEditor';
 import Keyboard from './Keyboard';
 import Knobs from './Knobs';
+import { FileDropZone } from './FileDropZone';
+import { TabbedLayout } from './TabbedLayout';
 
 const audioWorklet = require('fs').readFileSync(__dirname + '/../audioWorklet.js', 'utf-8');
 
@@ -15,8 +17,11 @@ export default class App extends Component {
     this.state = {
       initialized: false,
       messageQueue: [],
+
       knobs: {},
       keys: [],
+      files: {},
+
       error: '',
     };
 
@@ -42,6 +47,7 @@ export default class App extends Component {
       <>
         {this.state.initialized ? <></> : overlay}
         <SplitterLayout vertical percentage secondaryInitialSize={20}>
+
           <SplitterLayout percentage secondaryInitialSize={25}>
             <div className="editorWithError">
               <CodeEditor onChange={newValue => this.updateCode(newValue)} />
@@ -51,52 +57,17 @@ export default class App extends Component {
                 <div className="errorField sucess" />
               )}
             </div>
+
             <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
           </SplitterLayout>
-          <Keyboard keys={this.state.keys} onChange={this.updateNote} />
+
+          <TabbedLayout labels={["keys", "files"]}>
+            <Keyboard keys={this.state.keys} onChange={this.updateNote} />
+            <FileDropZone onAdd={this.updateFile} files={this.state.files} />
+          </TabbedLayout>
         </SplitterLayout>
       </>
     );
-  }
-
-  updateNote = (note, value) => {
-    if (value) {
-      this.setState(state => ({ keys: [...state.keys, note] }));
-    } else {
-      this.setState(state => ({ keys: state.keys.filter(key => key !== note) }));
-    }
-
-    this.port.postMessage({
-      type: 'update_note',
-      note,
-      value,
-    });
-  };
-
-  updateKnob = (name, value) => {
-    this.setState({
-      knobs: {
-        ...this.state.knobs,
-        [name]: value,
-      },
-    });
-
-    this.port.postMessage({
-      type: 'update_knob',
-      name,
-      value,
-    });
-  };
-
-  updateCode(code) {
-    this.port.postMessage({
-      type: 'shader_function',
-      func: `(
-        function(knobs, keys) {
-          ${code}\n
-        }
-      )`,
-    });
   }
 
   startAudio() {
@@ -143,6 +114,49 @@ export default class App extends Component {
       this.state.messageQueue.forEach(message => this.port.postMessage(message))
 
       audioWorklet.connect(audioContext.destination);
+    });
+  }
+
+  updateNote = (note, value) => {
+    if (value) {
+      this.setState(state => ({ keys: [...state.keys, note] }));
+    } else {
+      this.setState(state => ({ keys: state.keys.filter(key => key !== note) }));
+    }
+
+    this.port.postMessage({
+      type: 'update_note',
+      note,
+      value,
+    });
+  };
+
+  updateKnob = (name, value) => {
+    this.setState({
+      knobs: {
+        ...this.state.knobs,
+        [name]: value,
+      },
+    });
+
+    this.port.postMessage({
+      type: 'update_knob', name, value,
+    });
+  };
+
+  updateFile = (name, value) => {
+    this.setState(state => ({files: {[name]: value, ...state.files}}))
+    window.state = this.state
+
+    this.port.postMessage({
+      type: 'update_file', name, value,
+    });
+  };
+
+  updateCode = (code) => {
+    if(!this.port) return;
+    this.port.postMessage({
+      type: 'shader_function', code,
     });
   }
 }
