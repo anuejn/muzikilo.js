@@ -6,6 +6,7 @@ import { CodeEditor } from './CodeEditor';
 import Keyboard from './Keyboard';
 import Knobs from './Knobs';
 import { FileDropZone } from './FileDropZone';
+import { TabbedLayout } from './TabbedLayout';
 
 const audioWorklet = require('fs').readFileSync(__dirname + '/../audioWorklet.js', 'utf-8');
 
@@ -16,10 +17,12 @@ export default class App extends Component {
     this.state = {
       initialized: false,
       messageQueue: [],
+
       knobs: {},
       keys: [],
+      files: {},
+
       error: '',
-      samples: {}
     };
 
     this.port = {
@@ -41,10 +44,10 @@ export default class App extends Component {
     );
 
     return (
-<<<<<<< HEAD
       <>
         {this.state.initialized ? <></> : overlay}
         <SplitterLayout vertical percentage secondaryInitialSize={20}>
+
           <SplitterLayout percentage secondaryInitialSize={25}>
             <div className="editorWithError">
               <CodeEditor onChange={newValue => this.updateCode(newValue)} />
@@ -54,80 +57,24 @@ export default class App extends Component {
                 <div className="errorField sucess" />
               )}
             </div>
+
             <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
           </SplitterLayout>
-          <Keyboard keys={this.state.keys} onChange={this.updateNote} />
-=======
-      <SplitterLayout vertical percentage secondaryInitialSize={15}>
-        <SplitterLayout percentage secondaryInitialSize={25}>
-          <div className="editorWithError">
-            <CodeEditor onChange={newValue => this.updateCode(newValue)} />
-            {this.state.error ? (
-              <div className="errorField error">{this.state.error}</div>
-            ) : (
-              <div className="errorField sucess" />
-            )}
-          </div>
-          <SplitterLayout vertical percentage secondaryInitialSize={15} className="inputs">
-            <Knobs knobs={this.state.knobs} onChange={this.updateKnob} />
-            <FileDropZone onAdd={(name, samples) => this.setState({samples: {name: samples, ...this.state.samples}})}/>
-          </SplitterLayout>
->>>>>>> c55bc1b... begin working on file input
+
+          <TabbedLayout labels={["keys", "files"]}>
+            <Keyboard keys={this.state.keys} onChange={this.updateNote} />
+            <FileDropZone onAdd={this.updateFile} files={this.state.files} />
+          </TabbedLayout>
         </SplitterLayout>
       </>
     );
-  }
-
-  updateNote = (note, value) => {
-    if (value) {
-      this.setState(state => ({ keys: [...state.keys, note] }));
-    } else {
-      this.setState(state => ({ keys: state.keys.filter(key => key !== note) }));
-    }
-
-    this.port.postMessage({
-      type: 'update_note',
-      note,
-      value,
-    });
-  };
-
-  updateKnob = (name, value) => {
-    this.setState({
-      knobs: {
-        ...this.state.knobs,
-        [name]: value,
-      },
-    });
-
-    this.port.postMessage({
-      type: 'update_knob',
-      name,
-      value,
-    });
-  };
-
-  updateCode(code) {
-    if(!this.port) return;
-    this.port.postMessage({
-      type: 'shader_function',
-      func: `(
-        function(knobs, keys) {
-          ${code}\n
-        }
-      )`,
-    });
   }
 
   startAudio() {
     const audioContext = new AudioContext();
 
     if (!(audioContext && audioContext.audioWorklet)) {
-<<<<<<< HEAD
       alert('Your Browser seems to be unsupported :(');
-=======
-      alert('You need chrome 66+ to use muzikilo.js!');
->>>>>>> c55bc1b... begin working on file input
     }
 
     audioContext.createBuffer(1, 128, 44100);
@@ -167,6 +114,49 @@ export default class App extends Component {
       this.state.messageQueue.forEach(message => this.port.postMessage(message))
 
       audioWorklet.connect(audioContext.destination);
+    });
+  }
+
+  updateNote = (note, value) => {
+    if (value) {
+      this.setState(state => ({ keys: [...state.keys, note] }));
+    } else {
+      this.setState(state => ({ keys: state.keys.filter(key => key !== note) }));
+    }
+
+    this.port.postMessage({
+      type: 'update_note',
+      note,
+      value,
+    });
+  };
+
+  updateKnob = (name, value) => {
+    this.setState({
+      knobs: {
+        ...this.state.knobs,
+        [name]: value,
+      },
+    });
+
+    this.port.postMessage({
+      type: 'update_knob', name, value,
+    });
+  };
+
+  updateFile = (name, value) => {
+    this.setState(state => ({files: {[name]: value, ...state.files}}))
+    window.state = this.state
+
+    this.port.postMessage({
+      type: 'update_file', name, value,
+    });
+  };
+
+  updateCode = (code) => {
+    if(!this.port) return;
+    this.port.postMessage({
+      type: 'shader_function', code,
     });
   }
 }

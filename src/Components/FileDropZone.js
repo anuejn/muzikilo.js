@@ -1,58 +1,66 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import { useDropzone } from 'react-dropzone';
 
-export class FileDropZone extends React.Component {
-  constructor() {
-    super();
 
-    this.state = {
-      hovered: false,
-    };
-  }
-
-  render() {
-    return (
-      <div
-        ref={ref => (this.ref = ref)}
-        style={{
-          transition: 'background .2s',
-          background: this.state.hovered ? '#3E3E3E' : '#1E1E1E',
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-        }}
-      >
-        <label>
-          Drop Audio Samples here
-          <input
-            type="file"
-            style={{ display: 'none' }}
-            onChange={ev => {
-              this.openFile(ev.target.files[0]);
-            }}
-          />
-        </label>
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    this.ref.addEventListener('dragenter', ev => this.setState({ hovered: true }));
-    this.ref.addEventListener('dragleave', ev => this.setState({ hovered: false }));
-
-    this.ref.addEventListener('drop', ev => {
-      ev.preventDefault();
-      console.log(ev);
-    });
-  }
-
-  openFile(file) {
+export function FileDropZone({ files, onAdd }) {
+  function openFile(file) {
+    console.log(file)
     const audioContext = new AudioContext();
+    const name = file.name.replace(/ /g, "_").toLowerCase().split(".")[0]
     var reader = new FileReader();
-    reader.onload = () =>
-      audioContext.decodeAudioData(reader.result, decoded =>
-        this.props.onAdd('asdf', decoded.getChannelData(0))
+    reader.onload = () => {
+      audioContext.decodeAudioData(reader.result, decoded => {
+          onAdd(name, decoded.getChannelData(0))
+        }
       );
+    }
     reader.readAsArrayBuffer(file);
   }
+
+  const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
+    onDrop: files => {
+      files.forEach(f => openFile(f))
+    }
+  });
+
+  return (
+    <div
+      {...getRootProps({className: 'dropzone'})}
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <input {...getInputProps()} />
+      <p
+        style={{
+          paddingTop: '30px',
+          flexGrow: 1,
+        }}
+      >
+        Drag 'n' drop some files here, or click to select files. <br/>You can then use them as files["filename"]
+      </p>
+      <div
+        style={{
+          width: "100%",
+          margin: 0,
+          padding: 0,
+          display: 'flex',
+          flexWrap: 'wrap',
+        }}
+      >
+        {Object.keys(files).map(name => (
+          <span
+            key={name}
+            style={{
+              padding: '15px',
+            }}
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 }

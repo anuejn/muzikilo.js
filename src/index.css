@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   box-sizing: border-box;
   font-family: sans-serif;
@@ -23,7 +27,8 @@ html, body {
   padding: 0 25px;
   margin-top: 0;
   display: flex;
-  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .keyboard > div {
